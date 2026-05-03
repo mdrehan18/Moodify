@@ -6,7 +6,9 @@ const redis = require("../config/cache");
 const cookieOptions = {
   httpOnly: true,
   secure: true,
-  sameSite: "none"
+  sameSite: "none",
+  path: "/",              
+  maxAge: 3 * 24 * 60 * 60 * 1000 
 };
 
 async function registerUser(req, res) {
