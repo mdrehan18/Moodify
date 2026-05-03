@@ -7,14 +7,13 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://moodify-xi.vercel.app"
-];
-
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (
+      !origin ||
+      origin.includes("vercel.app") ||
+      origin.includes("localhost")
+    ) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
