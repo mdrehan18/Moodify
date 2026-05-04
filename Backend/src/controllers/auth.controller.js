@@ -3,13 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const redis = require("../config/cache");
 
-const cookieOptions = {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  path: "/",              
-  maxAge: 3 * 24 * 60 * 60 * 1000 
-};
 
 async function registerUser(req, res) {
   try {
@@ -42,10 +35,9 @@ async function registerUser(req, res) {
       { expiresIn: "3d" }
     );
 
-    res.cookie("token", token, cookieOptions);
-
     return res.status(201).json({
       message: "User registered successfully",
+      token,
       user: {
         id: user._id,
         username: user.username,
@@ -89,10 +81,9 @@ async function loginUser(req, res) {
       { expiresIn: "3d" }
     );
 
-    res.cookie("token", token, cookieOptions);
-
     return res.status(200).json({
       message: "User logged in successfully",
+      token,
       user: {
         id: user._id,
         username: user.username,
@@ -121,9 +112,8 @@ async function getMe(req, res) {
 
 async function logoutUser(req, res) {
   try {
-    const token = req.cookies.token;
-
-    res.clearCookie("token", cookieOptions);
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
 
     if (token) {
       await redis.set(token, Date.now().toString(), "EX", 60 * 60);

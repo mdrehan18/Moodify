@@ -9,36 +9,62 @@ export const useAuth = () => {
     const { user, setUser, loading, setLoading } = context
 
     async function handleRegister({ username, email, password }) {
-        setLoading(true)
-        const data = await register({ username, email, password })
-        setUser(data.user)
-        setLoading(false)
+        setLoading(true);
+        try {
+            const data = await register({ username, email, password });
+            setUser(data.user);
+            return data;
+        } finally {
+            setLoading(false);
+        }
     }
 
     async function handleLogin({ username, email, password }) {
-        setLoading(true)
-        const data = await login({ username, email, password })
-        setUser(data.user)
-        setLoading(false)
+        setLoading(true);
+        try {
+            const data = await login({ username, email, password });
+            setUser(data.user);
+            return data;
+        } finally {
+            setLoading(false);
+        }
     }
 
     async function handleGetMe() {
-        setLoading(true)
-        const data = await getMe()
-        setUser(data.user)
-        setLoading(false)
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+            const data = await getMe();
+            setUser(data.user);
+        } catch (error) {
+            console.error("Auth verification failed", error);
+            setUser(null);
+            localStorage.removeItem("token");
+        } finally {
+            setLoading(false);
+        }
     }
 
     async function handleLogout() {
-        setLoading(true)
-        const data = await logout()
-        setUser(null)
-        setLoading(false)
+        setLoading(true);
+        try {
+            await logout();
+            setUser(null);
+            localStorage.removeItem("token");
+        } catch (error) {
+            console.error("Logout failed", error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
-        handleGetMe()
-    }, [])
+        handleGetMe();
+    }, []);
 
     return ({
         user, loading, handleRegister, handleLogin, handleLogout, handleGetMe

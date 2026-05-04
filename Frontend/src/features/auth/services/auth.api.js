@@ -1,35 +1,32 @@
-import axios from "axios"
-console.log(import.meta.env.VITE_API_URL); 
-
-const api = axios.create({
-    
-    baseURL:import.meta.env.VITE_API_URL,
-    withCredentials: true
-    
-})
+import api from "../../shared/api/axios";
 
 export async function register({ email, password, username }) {
     const response = await api.post("/api/auth/register", {
         email, password, username
-    })
-
-    return response.data
+    });
+    if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+    }
+    return response.data;
 }
 
 export async function login({ email, username, password }) {
     const response = await api.post("/api/auth/login", {
         email, username, password
-    })
-
-    return response.data
+    });
+    if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+    }
+    return response.data;
 }
 
 export async function getMe() {
-    const response = await api.get("/api/auth/get-me")
-    return response.data
+    const response = await api.get("/api/auth/get-me");
+    return response.data;
 }
 
 export async function logout() {
-    const response = await api.get("/api/auth/logout")
-    return response.data
+    const response = await api.get("/api/auth/logout");
+    localStorage.removeItem("token");
+    return response.data;
 }

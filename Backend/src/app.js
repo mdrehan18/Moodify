@@ -22,8 +22,7 @@ app.use(cors({
         } else {
             return callback(new Error("CORS Not Allowed"));
         }
-    },
-    credentials: true
+    }
 }));
 
 /**

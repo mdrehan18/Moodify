@@ -1,12 +1,4 @@
-import axios from "axios";
-
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    withCredentials: true
-});
-
-
+import api from "../../shared/api/axios";
 export async function getSong({ mood }) {
     const response = await api.get("/api/songs?mood=" + mood)
     console.log(response)

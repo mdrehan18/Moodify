@@ -42,7 +42,7 @@ async function getSong(req, res) {
     const { mood } = req.query
 
     const song = await songModel.findOne({
-        mood,
+        mood: { $regex: new RegExp(`^${mood}$`, 'i') }
     })
 
     res.status(200).json({
