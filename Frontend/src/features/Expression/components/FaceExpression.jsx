@@ -33,7 +33,7 @@ export default function FaceExpression({ onClick = () => { } }) {
 
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '1.5rem', background: 'rgba(20, 25, 40, 0.4)', padding: '2rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="scanner-card">
             <div style={{ textAlign: 'center' }}>
                 <h4 style={{ fontSize: '0.65rem', letterSpacing: '1px', textTransform: 'uppercase', color: '#00ffff', marginBottom: '0.5rem' }}>MOODIFY SCANNER</h4>
                 <h2 style={{ fontSize: '1.25rem', fontWeight: '700' }}>Expression Capture</h2>
