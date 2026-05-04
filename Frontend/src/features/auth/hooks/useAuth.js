@@ -62,9 +62,7 @@ export const useAuth = () => {
         }
     }
 
-    useEffect(() => {
-        handleGetMe();
-    }, []);
+
 
     return ({
         user, loading, handleRegister, handleLogin, handleLogout, handleGetMe
