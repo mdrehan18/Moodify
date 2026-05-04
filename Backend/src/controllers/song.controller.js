@@ -38,18 +38,33 @@ async function uploadSong(req, res) {
 }
 
 async function getSong(req, res) {
+    try {
+        const { mood } = req.query;
 
-    const { mood } = req.query
+        if (!mood) {
+            return res.status(400).json({ message: "Mood query parameter is required." });
+        }
 
-    const song = await songModel.findOne({
-        mood: { $regex: new RegExp(`^${mood}$`, 'i') }
-    })
+        const songs = await songModel.aggregate([
+            { $match: { mood: { $regex: new RegExp(`^${mood}$`, 'i') } } },
+            { $sample: { size: 1 } }
+        ]);
 
-    res.status(200).json({
-        message: "song fetched successfully.",
-        song,
-    })
+        if (!songs || songs.length === 0) {
+            return res.status(200).json({
+                message: "No song found for this mood.",
+                song: null,
+            });
+        }
 
+        res.status(200).json({
+            message: "Random song fetched successfully.",
+            song: songs[0],
+        });
+    } catch (error) {
+        console.error("Error fetching random song:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 }
 
 
